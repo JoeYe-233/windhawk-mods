@@ -256,7 +256,8 @@ void ScanAndHookMso() {
 
     HMODULE hMsoClient = GetModuleHandleW(L"mso30win32client.dll");
     if (!hMsoClient) return;
-
+    
+    //mso30win32client.dll
     WindhawkUtils::SYMBOL_HOOK msoHook[] = {
         {
             { SYM_CalculateDisplayName },
