@@ -1,8 +1,8 @@
 // ==WindhawkMod==
 // @id            office-fix-account-disp-name
 // @name          Office Fix Account Display Name
-// @name:zh-CN    Office 修复右上角中文名倒置与空格
-// @description   Fixes the inverted First/Last name and the hardcoded space in Office apps.
+// @name:zh-CN    Office 修复右上角账户名显示
+// @description   Fixes the inverted First/Last name and the hardcoded space in Office apps. Supports custom display name override.
 // @description:zh-CN 彻底修复 Office 软件右上角账户名中英倒置以及强行插入空格的问题，支持自定义名称
 // @version       1.0.0
 // @author        Joe Ye
