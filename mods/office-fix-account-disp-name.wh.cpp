@@ -85,20 +85,19 @@ Take full control over your Microsoft Office account display name! This mod allo
 #include <shlwapi.h>
 #include <windhawk_api.h>
 #include <windhawk_utils.h>
+#include <atomic>
 
 // =============================================================
 // Global state and settings variables
 // =============================================================
-bool g_msoHooked = false; 
+std::atomic<bool> g_msoHooked{false}; 
 
 // Global variable for the custom setting
 char g_CustomNameText[256] = {0}; // Stores UTF-8 data
 
 #ifdef _WIN64
-    #define WH_CALLCONV
     #define SYM_CalculateDisplayName L"?CalculateDisplayName@AccountInfo@Msoa@@AEBA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@XZ"
 #else
-    #define WH_CALLCONV __fastcall
     #define SYM_CalculateDisplayName L"?CalculateDisplayName@AccountInfo@Msoa@@ABE?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@XZ"
 #endif
 // =============================================================
@@ -132,21 +131,11 @@ void LoadUserSettings() {
 // Hook logic: smart mode and forced override
 // =============================================================
 
-#ifdef _WIN64
-typedef void* (WH_CALLCONV *CalculateDisplayName_t)(void* pThis, void* pOutStr);
-#else
-typedef void* (__fastcall *CalculateDisplayName_t)(void* pThis, void* edx_dummy, void* pOutStr);
-#endif
-
+typedef void* (__thiscall *CalculateDisplayName_t)(void* pThis, void* pOutStr);
 CalculateDisplayName_t pOrig_CalculateDisplayName = nullptr;
 
-#ifdef _WIN64
-void* WH_CALLCONV Hook_CalculateDisplayName(void* pThis, void* pOutStr) {
+void* __thiscall Hook_CalculateDisplayName(void* pThis, void* pOutStr) {
     void* ret = pOrig_CalculateDisplayName(pThis, pOutStr);
-#else
-void* WH_CALLCONV Hook_CalculateDisplayName(void* pThis, void* edx_dummy, void* pOutStr) {
-    void* ret = pOrig_CalculateDisplayName(pThis, edx_dummy, pOutStr);
-#endif
 
     if (!pOutStr) return ret;
 
